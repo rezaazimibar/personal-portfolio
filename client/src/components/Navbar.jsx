@@ -1,19 +1,22 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
+import { assets } from '../assets/assets'
 
 const Navbar = () => {
     const [open, setOpen] = React.useState(false)
     return (
         <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
 
-            <a href="#">
-                <img className="h-9" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/dummyLogo/dummyLogoColored.svg" alt="dummyLogoColored" />
-            </a>
+            <NavLink to='/'>
+                <img className="h-9" src={assets.logo} alt="logo" />
+            </NavLink>
 
             {/* Desktop Menu */}
             <div className="hidden sm:flex items-center gap-8">
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
+                <NavLink to='/'>Home</NavLink>
+                <NavLink to='/products'>All Product</NavLink>
+                <NavLink to='/'>Contact</NavLink>
+
 
                 <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
                     <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
