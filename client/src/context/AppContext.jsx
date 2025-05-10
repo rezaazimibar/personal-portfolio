@@ -2,6 +2,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dummyProducts } from "../assets/assets";
 import toast from "react-hot-toast";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
 export const AppContext = createContext();
 
@@ -17,9 +21,27 @@ export const AppContextProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState({})
     const [searchQuery, setSearchQuery] = useState({})
 
+    // Fetch Seller Status
+    const fetchSeller = async () => {
+        try {
+            const { data } = await axios.get('/api/seller/is-auth');
+            if (data.success) {
+                setIsSeller(true)
+            } else {
+                setIsSeller(false)
+            }
+        } catch (error) {
+            setIsSeller(false)
+        }
+    }
+
     // Fetch All Products
     const fetchProducts = async () => {
-        setProducts(dummyProducts)
+        try {
+            const {data} = await axios.get('/api/product/list')
+        } catch (error) {
+            
+        }
     }
 
     // Add Product To card
@@ -48,7 +70,7 @@ export const AppContextProvider = ({ children }) => {
         let cartData = structuredClone(cartItems);
         if (cartData[itemID]) {
             cartData[itemID] -= 1
-            if(cartData[itemID] === 0){
+            if (cartData[itemID] === 0) {
                 delete cartData[itemID]
             }
         }
@@ -57,20 +79,20 @@ export const AppContextProvider = ({ children }) => {
     }
 
     // Get Cart Item Count
-    const getCartCount = ()=>{
+    const getCartCount = () => {
         let totalCount = 0
-        for(const item in cartItems){
+        for (const item in cartItems) {
             totalCount += cartItems[item]
         }
         return totalCount;
     }
 
     // Get Cart Total Amount
-    const getCartAmount =()=>{
-        let totalAmount = 0 
-        for(const items in cartItems){
-            let itemInfo = products.find((product)=>product._id === items);
-            if(cartItems[items] > 0){
+    const getCartAmount = () => {
+        let totalAmount = 0
+        for (const items in cartItems) {
+            let itemInfo = products.find((product) => product._id === items);
+            if (cartItems[items] > 0) {
                 totalAmount += itemInfo.offerPrice * cartItems[items]
             }
         }
@@ -79,13 +101,15 @@ export const AppContextProvider = ({ children }) => {
 
 
     useEffect(() => {
+        fetchSeller()
         fetchProducts()
     }, [])
 
     const value = {
         navigate, user, setUser, setIsSeller, isSeller,
-        showUserLogin, setShowUserLogin, products, currency, addToCart, updateCartItem, 
-        removeFromCart, cartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount
+        showUserLogin, setShowUserLogin, products ,setProducts ,currency, addToCart, updateCartItem,
+        removeFromCart, cartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount,
+        axios
     }
 
     return <AppContext.Provider value={value}>
