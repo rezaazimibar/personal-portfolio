@@ -39,7 +39,7 @@ export const register = async (req, res) => {
 
 }
 
-// Login User :  
+// Login User :  /api/user/login
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -72,3 +72,16 @@ export const login = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 }
+
+// Check Auth: /api/user/is-auth
+export const isAuth = async () => {
+    try {
+        const { userId } = req.body;
+        const user = await User.findById(userId).select("-password")
+        return res.json({ success: true, user })
+    } catch (error) {
+        console.log(error.message);
+        res.json({ success: false, message: error.message });
+    }
+}
+
