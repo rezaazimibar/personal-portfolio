@@ -2,7 +2,7 @@ import { v2 as cloudinary } from "cloudinary"
 import Product from "../models/Product.js"
 
 // Add Product: /app/product/add
-export const addProduct = async (req, seq) => {
+export const addProduct = async (req, res) => {
     try {
         let productData = JSON.parse(req.body.productData)
 
@@ -26,7 +26,7 @@ export const addProduct = async (req, seq) => {
 }
 
 // Get Product: /app/product/list
-export const productList = async (req, seq) => {
+export const productList = async (req, res) => {
     try {
         const products = await Product.find({})
         res.json({ success: true, products })
@@ -37,7 +37,7 @@ export const productList = async (req, seq) => {
 }
 
 // Get single Product: /app/product/id
-export const productById = async (req, seq) => {
+export const productById = async (req, res) => {
     try {
         const { id } = req.body
         const product = await Product.findById(id)
@@ -49,7 +49,7 @@ export const productById = async (req, seq) => {
 }
 
 // Change product inStock: /app/product/stock
-export const changeStock = async (req, seq) => {
+export const changeStock = async (req, res) => {
     try {
         const { id, inStock } = req.body
         await Product.findByIdAndUpdate(id, { inStock })
